@@ -2,23 +2,23 @@ spring:
   application:
     name: servico-notificacao   
     
-  datasource:
-    url: jdbc:postgresql://localhost:5432/medconnect
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
+  # datasource:
+  #   url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/medconnect}
+  #   username: ${SPRING_DATASOURCE_USERNAME:postgres}
+  #   password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+  #   driver-class-name: org.postgresql.Driver
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+  # jpa:
+  #   hibernate:
+  #     ddl-auto: update
+  #   show-sql: true
+  #   properties:
+  #     hibernate:
+  #       format_sql: true
 
-  flyway:
-    enabled: true
-    locations: classpath:banco/migracoes
+  # flyway:
+  #   enabled: true
+  #   locations: classpath:banco/migracoes
 
   kafka:
     bootstrap-servers: localhost:9092
