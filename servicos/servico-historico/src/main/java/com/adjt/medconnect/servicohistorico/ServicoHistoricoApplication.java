@@ -1,4 +1,4 @@
-package com.adjt.medconnect.servico_historico;
+package com.adjt.medconnect.servicohistorico;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

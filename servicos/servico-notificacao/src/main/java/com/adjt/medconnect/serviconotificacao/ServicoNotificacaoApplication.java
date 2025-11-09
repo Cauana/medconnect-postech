@@ -1,4 +1,4 @@
-package com.adjt.medconnect.servico_notificacao;
+package com.adjt.medconnect.serviconotificacao;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
