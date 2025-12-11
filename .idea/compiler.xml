@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="autenticacao" />
+        <module name="servico-historico" />
+        <module name="servico-notificacao" />
+        <module name="servico-agendamento" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="autenticacao" options="-parameters" />
+      <module name="servico-agendamento" options="-parameters" />
+      <module name="servico-historico" options="-parameters" />
+      <module name="servico-notificacao" options="-parameters" />
+    </option>
+  </component>
+</project>
