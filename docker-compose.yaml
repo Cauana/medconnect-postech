@@ -27,6 +27,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/medconnect
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+      JWT_SECRET: medconnect-secret-key
+      JWT_EXPIRATION: 86400000
     depends_on:
       - postgres
     networks:
