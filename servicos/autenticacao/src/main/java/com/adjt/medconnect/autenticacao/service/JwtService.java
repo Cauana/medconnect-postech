@@ -2,12 +2,15 @@ package com.adjt.medconnect.autenticacao.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
@@ -15,14 +18,24 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private static final String SECRET = "wZ3fK8s9vTqL1xR6mYjP0hVbC4uN8qFw5dG2sK0pQrE=";
+
+    @Value("${JWT_SECRET}")
+    private String jwtSecret;
 
     @Value("${JWT_EXPIRATION}")
     private long jwtExpiration;
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Base64.getDecoder().decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64URL.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("--- JWT SECRET LIDO: " + jwtSecret);
+        // Tente também a decodificação e o tamanho do byte array para ver 15 bytes
+        // byte[] keyBytes = Decoders.BASE64URL.decode(jwtSecret);
+        // System.out.println("--- TAMANHO DO SECRET DECODIFICADO: " + keyBytes.length + " bytes");
     }
 
     /* =========================
