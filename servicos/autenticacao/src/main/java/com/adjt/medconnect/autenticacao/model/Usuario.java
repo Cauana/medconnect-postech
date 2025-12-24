@@ -17,10 +17,10 @@ public class Usuario {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String username;
+    private String usuario;
 
     @Column(nullable = false)
-    private String password;
+    private String senha;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
