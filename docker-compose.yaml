@@ -14,6 +14,11 @@ services:
       - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - medconnect-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Autenticação
   servico-autenticacao:
@@ -75,8 +80,10 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
-      - postgres
-      - kafka
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
     networks:
       - medconnect-net
 

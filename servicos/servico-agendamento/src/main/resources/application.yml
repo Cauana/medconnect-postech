@@ -3,25 +3,22 @@ spring:
     name: servico-agendamento   
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/medconnect}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/medconnect}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-
-  flyway:
-    enabled: true
-    locations: classpath:banco/migracoes
+        generate_statistics: false
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
     consumer:
       group-id: medconnect
       auto-offset-reset: earliest
@@ -35,6 +32,8 @@ server:
 logging:
   level:
     root: INFO
+    org.hibernate: DEBUG
+    org.hibernate.tool.schema: DEBUG
 
 springdoc:
   swagger-ui:
