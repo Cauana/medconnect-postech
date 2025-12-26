@@ -2,6 +2,7 @@ package com.adjt.medconnect.autenticacao.controller;
 
 import com.adjt.medconnect.autenticacao.dto.*;
 import com.adjt.medconnect.autenticacao.exception.CredenciaisInvalidasException;
+import com.adjt.medconnect.autenticacao.exception.UnauthorizedException;
 import com.adjt.medconnect.autenticacao.model.Role;
 import com.adjt.medconnect.autenticacao.model.Usuario;
 import com.adjt.medconnect.autenticacao.repository.UsuarioRepository;
@@ -62,6 +63,10 @@ public class AuthController {
             Authentication authentication,
             @RequestBody UpdatePasswordDTO dto
             ){
+
+        if(authentication == null || !authentication.isAuthenticated()){
+            throw new UnauthorizedException();
+        }
         usuarioService.atualizarSenhaDoUsuarioLogado(
                 authentication.getName(),
                 dto.novaSenha()
