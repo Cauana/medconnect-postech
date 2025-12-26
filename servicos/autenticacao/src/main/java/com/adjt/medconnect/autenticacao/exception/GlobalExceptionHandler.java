@@ -1,6 +1,7 @@
 package com.adjt.medconnect.autenticacao.exception;
 
 import com.adjt.medconnect.autenticacao.dto.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.nio.file.AccessDeniedException;
+import java.time.Instant;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -55,6 +57,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("erro",ex.getMessage()));
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<?> handlerUnauthorized(UnauthorizedException ex, HttpServletRequest request){
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of(
+                        "timestamp", Instant.now(),
+                        "status",401,
+                        "error", "Unauthorized",
+                        "message",ex.getMessage(),
+                        "path",request.getRequestURI()
+                ));
     }
 
 }
