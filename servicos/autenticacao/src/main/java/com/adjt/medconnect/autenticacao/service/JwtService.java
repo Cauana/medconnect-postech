@@ -33,9 +33,7 @@ public class JwtService {
     @PostConstruct
     public void init() {
         System.out.println("--- JWT SECRET LIDO: " + jwtSecret);
-        // Tente também a decodificação e o tamanho do byte array para ver 15 bytes
-        // byte[] keyBytes = Decoders.BASE64URL.decode(jwtSecret);
-        // System.out.println("--- TAMANHO DO SECRET DECODIFICADO: " + keyBytes.length + " bytes");
+
     }
 
     /* =========================
