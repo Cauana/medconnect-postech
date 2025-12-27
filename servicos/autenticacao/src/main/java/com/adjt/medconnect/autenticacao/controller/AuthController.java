@@ -20,6 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -98,5 +101,12 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<String> me(Authentication auth) {
         return ResponseEntity.ok("Você está autenticado: " + auth.getName());
+    }
+
+    @GetMapping("/roles")
+    public List<String> listaRoles(){
+        return Arrays.stream(Role.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
     }
 }
