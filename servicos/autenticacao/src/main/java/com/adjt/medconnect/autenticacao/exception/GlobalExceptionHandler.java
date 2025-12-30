@@ -2,10 +2,11 @@ package com.adjt.medconnect.autenticacao.exception;
 
 import com.adjt.medconnect.autenticacao.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.nio.file.AccessDeniedException;
@@ -70,6 +71,22 @@ public class GlobalExceptionHandler {
                         "message",ex.getMessage(),
                         "path",request.getRequestURI()
                 ));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
+        return ResponseEntity.status(401).body("Erro de autenticação: " + e.getMessage());
+    }
+
+
+    @ExceptionHandler(io.jsonwebtoken.ExpiredJwtException.class)
+    public ResponseEntity<String> handleExpiredJwtException(io.jsonwebtoken.ExpiredJwtException e) {
+        return ResponseEntity.status(401).body("Token JWT expirado");
+    }
+
+    @ExceptionHandler(io.jsonwebtoken.security.SignatureException.class)
+    public ResponseEntity<String> handleSignatureException(io.jsonwebtoken.security.SignatureException e) {
+        return ResponseEntity.status(401).body("Token JWT inválido");
     }
 
 }
