@@ -21,7 +21,9 @@ services:
 
   # Autenticação
   servico-autenticacao:
-    build: ./servicos/autenticacao
+    build:
+      context: .
+      dockerfile: servicos/autenticacao/Dockerfile
     container_name: medconnect_autenticacao
     ports:
       - "8080:8080"
