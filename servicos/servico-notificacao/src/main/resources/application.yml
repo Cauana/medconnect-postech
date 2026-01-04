@@ -8,20 +8,16 @@ spring:
   #   password: ${SPRING_DATASOURCE_PASSWORD:postgres}
   #   driver-class-name: org.postgresql.Driver
 
-  # jpa:
-  #   hibernate:
-  #     ddl-auto: update
-  #   show-sql: true
-  #   properties:
-  #     hibernate:
-  #       format_sql: true
-
-  # flyway:
-  #   enabled: true
-  #   locations: classpath:banco/migracoes
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
     consumer:
       group-id: medconnect
       auto-offset-reset: earliest

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Banco de dados PostgreSQL
   postgres:
@@ -13,6 +11,30 @@ services:
       - "5432:5432"
     volumes:
       - ./dados_postgres:/var/lib/postgresql/data
+    networks:
+      - medconnect-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Autenticação
+  servico-autenticacao:
+    build:
+      context: .
+      dockerfile: servicos/autenticacao/Dockerfile
+    container_name: medconnect_autenticacao
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      JWT_EXPIRATION: 86400000
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - medconnect-net
 
@@ -59,8 +81,10 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
-      - postgres
-      - kafka
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
     networks:
       - medconnect-net
 
@@ -94,7 +118,8 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - medconnect-net
 
