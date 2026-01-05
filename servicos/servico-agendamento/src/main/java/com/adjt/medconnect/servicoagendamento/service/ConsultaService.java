@@ -67,6 +67,25 @@ public class ConsultaService {
         return consultaRepository.save(consulta);
     }
 
+    /**
+     * Atualiza status com validação de papel/ownership.
+     */
+    public Consulta atualizarStatusAutorizado(long id, StatusConsulta novoStatus, String userRole, long userId) {
+        Consulta consulta = consultaRepository.findById(id)
+                .orElseThrow(() -> new java.util.NoSuchElementException("Consulta não encontrada"));
+
+        if ("PACIENTE".equals(userRole)) {
+            throw new SecurityException("Paciente não pode atualizar status");
+        }
+
+        if ("MEDICO".equals(userRole) && consulta.getIdMedico() != userId) {
+            throw new SecurityException("Médico não pode atualizar status de consulta de outro médico");
+        }
+
+        consulta.setStatus(novoStatus);
+        return consultaRepository.save(consulta);
+    }
+
     public void deletar(long id) {
         consultaRepository.deleteById(id);
     }
@@ -91,5 +110,52 @@ public class ConsultaService {
 
         kafkaTemplate.send("agendamento-topic", event);
         return salva;
+    }
+
+    /**
+     * Edita uma consulta existente aplicando regras de acesso por papel.
+     * - MEDICO pode editar somente se for o médico responsável
+     * - ENFERMEIRO e ADMIN podem editar qualquer consulta
+     * - PACIENTE não pode editar
+     */
+    public Consulta editarConsulta(long id, Consulta consultaAtualizada, String userRole, long userId) {
+        Consulta consultaExistente = consultaRepository.findById(id)
+                .orElseThrow(() -> new java.util.NoSuchElementException("Consulta não encontrada"));
+
+        if ("PACIENTE".equals(userRole)) {
+            throw new SecurityException("Paciente não pode editar consultas");
+        }
+
+        if ("MEDICO".equals(userRole) && consultaExistente.getIdMedico() != userId) {
+            throw new SecurityException("Médico não pode editar consulta de outro médico");
+        }
+
+        // Se idPaciente foi alterado, validar existência
+        if (consultaAtualizada.getIdPaciente() > 0 && consultaAtualizada.getIdPaciente() != consultaExistente.getIdPaciente()) {
+            usuarioRepository.findById(consultaAtualizada.getIdPaciente())
+                    .orElseThrow(() -> new IllegalArgumentException("Paciente informado não existe"));
+            consultaExistente.setIdPaciente(consultaAtualizada.getIdPaciente());
+        }
+
+        // Se idMedico foi alterado, validar existência
+        if (consultaAtualizada.getIdMedico() > 0 && consultaAtualizada.getIdMedico() != consultaExistente.getIdMedico()) {
+            usuarioRepository.findById(consultaAtualizada.getIdMedico())
+                    .orElseThrow(() -> new IllegalArgumentException("Médico informado não existe"));
+            consultaExistente.setIdMedico(consultaAtualizada.getIdMedico());
+        }
+
+        if (consultaAtualizada.getDataHora() != null) {
+            consultaExistente.setDataHora(consultaAtualizada.getDataHora());
+        }
+
+        if (consultaAtualizada.getObservacoes() != null) {
+            consultaExistente.setObservacoes(consultaAtualizada.getObservacoes());
+        }
+
+        if (consultaAtualizada.getStatus() != null) {
+            consultaExistente.setStatus(consultaAtualizada.getStatus());
+        }
+
+        return consultaRepository.save(consultaExistente);
     }
 }

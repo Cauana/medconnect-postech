@@ -1,28 +1,20 @@
-package com.adjt.medconnect.autenticacao.service;
+package com.adjt.medconnect.servicoagendamento.common;
 
-import com.adjt.medconnect.autenticacao.model.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-@Service
+@Component
 public class JwtService {
 
-    @Value("${JWT_SECRET}")
+    @Value("${jwt.secret:${JWT_SECRET}}")
     private String jwtSecret;
-
-    @Value("${JWT_EXPIRATION}")
-    private long jwtExpiration;
 
     private Key signingKey;
 
@@ -30,23 +22,7 @@ public class JwtService {
     public void init() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         signingKey = Keys.hmacShaKeyFor(keyBytes);
-        System.out.println("--- JWT SECRET carregado: " + jwtSecret);
-    }
-
-    // Gera token com username e role
-    public String gerarToken(Usuario usuario) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("role", usuario.getRole().name());
-        // include the numeric user id so downstream services can map tokens to local profiles
-        claims.put("userId", usuario.getId());
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(usuario.getUsuario())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(signingKey, SignatureAlgorithm.HS256)
-                .compact();
+        System.out.println("--- JWT SECRET carregado no serviço de agendamento");
     }
 
     // Extrai username do token
@@ -57,6 +33,18 @@ public class JwtService {
     // Extrai role do token
     public String extractRole(String token) {
         return extractAllClaims(token).get("role", String.class);
+    }
+
+    // Extrai userId (se presente) do token
+    public Long extractUserId(String token) {
+        Object val = extractAllClaims(token).get("userId");
+        if (val instanceof Number) {
+            return ((Number) val).longValue();
+        }
+        if (val instanceof String) {
+            try { return Long.parseLong((String) val); } catch (NumberFormatException e) { return null; }
+        }
+        return null;
     }
 
     // Valida token

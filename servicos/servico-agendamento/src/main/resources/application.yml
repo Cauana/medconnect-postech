@@ -29,11 +29,16 @@ spring:
 server:
   port: 8080
 
+jwt:
+  secret: ${JWT_SECRET:mySuperSecretKeyThatIsLongEnoughForHS256AlgorithmAndMore}
+  expiration: ${JWT_EXPIRATION:86400000}
+
 logging:
   level:
     root: INFO
     org.hibernate: DEBUG
     org.hibernate.tool.schema: DEBUG
+    com.adjt.medconnect.servicoagendamento.common: DEBUG
 
 springdoc:
   swagger-ui:

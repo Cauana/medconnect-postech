@@ -1,0 +1,441 @@
+{
+  "info": {
+    "name": "MedConnect E2E Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1 - Admin Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    pm.collectionVariables.set('admin_token', pm.response.json().token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"usuario\": \"admin\", \"senha\": \"admin\"}"
+        },
+        "url": "http://localhost:8080/auth/login"
+      }
+    },
+    {
+      "name": "2 - Register Medico",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"usuario\": \"medico1\", \"senha\": \"med123\", \"role\": \"MEDICO\"}"
+        },
+        "url": "http://localhost:8080/auth/register"
+      }
+    },
+    {
+      "name": "3 - Register Enfermeiro",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"usuario\": \"enf1\", \"senha\": \"enf123\", \"role\": \"ENFERMEIRO\"}"
+        },
+        "url": "http://localhost:8080/auth/register"
+      }
+    },
+    {
+      "name": "4 - Register Paciente 1",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"usuario\": \"pac1\", \"senha\": \"pac123\", \"role\": \"PACIENTE\"}"
+        },
+        "url": "http://localhost:8080/auth/register"
+      }
+    },
+    {
+      "name": "5 - Register Paciente 2",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"usuario\": \"pac2\", \"senha\": \"pac234\", \"role\": \"PACIENTE\"}"
+        },
+        "url": "http://localhost:8080/auth/register"
+      }
+    },
+    {
+      "name": "6 - Create Medico Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200 || pm.response.code === 201) {",
+              "    pm.collectionVariables.set('medico_profile_id', pm.response.json().id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nome\": \"Dr. João Médico\", \"cpf\": \"11111111111\", \"email\": \"medico1@example.com\", \"dataNascimento\": \"1980-01-01\", \"tipo\": \"MEDICO\"}"
+        },
+        "url": "http://localhost:8081/usuarios"
+      }
+    },
+    {
+      "name": "7 - Create Enfermeiro Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200 || pm.response.code === 201) {",
+              "    pm.collectionVariables.set('enf_profile_id', pm.response.json().id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nome\": \"Enf. Maria\", \"cpf\": \"22222222222\", \"email\": \"enf1@example.com\", \"dataNascimento\": \"1990-05-05\", \"tipo\": \"ENFERMEIRO\"}"
+        },
+        "url": "http://localhost:8081/usuarios"
+      }
+    },
+    {
+      "name": "8 - Create Paciente 1 Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200 || pm.response.code === 201) {",
+              "    pm.collectionVariables.set('paciente_profile_id', pm.response.json().id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nome\": \"Paciente 1\", \"cpf\": \"33333333333\", \"email\": \"pac1@example.com\", \"dataNascimento\": \"2000-02-02\", \"tipo\": \"PACIENTE\"}"
+        },
+        "url": "http://localhost:8081/usuarios"
+      }
+    },
+    {
+      "name": "9 - Create Paciente 2 Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200 || pm.response.code === 201) {",
+              "    pm.collectionVariables.set('paciente2_profile_id', pm.response.json().id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nome\": \"Paciente 2\", \"cpf\": \"44444444444\", \"email\": \"pac2@example.com\", \"dataNascimento\": \"2001-03-03\", \"tipo\": \"PACIENTE\"}"
+        },
+        "url": "http://localhost:8081/usuarios"
+      }
+    },
+    {
+      "name": "10 - Login Enfermeiro",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    pm.collectionVariables.set('enfermeiro_token', pm.response.json().token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"usuario\": \"enf1\", \"senha\": \"enf123\"}"
+        },
+        "url": "http://localhost:8080/auth/login"
+      }
+    },
+    {
+      "name": "11 - Enfermeiro cria consulta",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200 || pm.response.code === 201) {",
+              "    pm.collectionVariables.set('consulta_by_enf', pm.response.json().id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Authorization", "value": "Bearer {{enfermeiro_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"idPaciente\": {{paciente_profile_id}}, \"idMedico\": {{medico_profile_id}}, \"dataHora\": \"2026-02-20T14:30:00\", \"observacoes\": \"Criada pelo enfermeiro\"}"
+        },
+        "url": "http://localhost:8081/consultas"
+      }
+    },
+    {
+      "name": "12 - Enfermeiro lista todas",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{enfermeiro_token}}"}
+        ],
+        "url": "http://localhost:8081/consultas"
+      }
+    },
+    {
+      "name": "13 - Login Medico",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    pm.collectionVariables.set('medico_token', pm.response.json().token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"usuario\": \"medico1\", \"senha\": \"med123\"}"
+        },
+        "url": "http://localhost:8080/auth/login"
+      }
+    },
+    {
+      "name": "14 - Medico cria consulta pac2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200 || pm.response.code === 201) {",
+              "    pm.collectionVariables.set('consulta_pac2', pm.response.json().id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Authorization", "value": "Bearer {{medico_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"idPaciente\": {{paciente2_profile_id}}, \"idMedico\": {{medico_profile_id}}, \"dataHora\": \"2026-04-10T09:00:00\", \"observacoes\": \"Consulta do paciente 2\"}"
+        },
+        "url": "http://localhost:8081/consultas"
+      }
+    },
+    {
+      "name": "15 - Medico atualiza consulta",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Authorization", "value": "Bearer {{medico_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"dataHora\": \"2026-03-01T10:00:00\", \"observacoes\": \"Reagendada pelo médico\"}"
+        },
+        "url": "http://localhost:8081/consultas/{{consulta_by_enf}}"
+      }
+    },
+    {
+      "name": "16 - Medico atualiza status",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Authorization", "value": "Bearer {{medico_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"status\": \"CONFIRMADA\"}"
+        },
+        "url": "http://localhost:8081/consultas/{{consulta_by_enf}}/status"
+      }
+    },
+    {
+      "name": "17 - Login Paciente 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    pm.collectionVariables.set('paciente_token', pm.response.json().token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"usuario\": \"pac1\", \"senha\": \"pac123\"}"
+        },
+        "url": "http://localhost:8080/auth/login"
+      }
+    },
+    {
+      "name": "18 - Paciente 1 lista consultas",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{paciente_token}}"}
+        ],
+        "url": "http://localhost:8081/consultas"
+      }
+    },
+    {
+      "name": "19 - Paciente 1 tenta criar (403)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Authorization", "value": "Bearer {{paciente_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"idPaciente\": {{paciente_profile_id}}, \"idMedico\": {{medico_profile_id}}, \"dataHora\": \"2026-05-01T08:00:00\", \"observacoes\": \"Tentativa do paciente\"}"
+        },
+        "url": "http://localhost:8081/consultas"
+      }
+    },
+    {
+      "name": "20 - Login Paciente 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    pm.collectionVariables.set('paciente2_token', pm.response.json().token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"usuario\": \"pac2\", \"senha\": \"pac234\"}"
+        },
+        "url": "http://localhost:8080/auth/login"
+      }
+    },
+    {
+      "name": "21 - Paciente 2 lista consultas",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{paciente2_token}}"}
+        ],
+        "url": "http://localhost:8081/consultas"
+      }
+    },
+    {
+      "name": "22 - Paciente 2 tenta criar (403)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Authorization", "value": "Bearer {{paciente2_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"idPaciente\": {{paciente_profile_id}}, \"idMedico\": {{medico_profile_id}}, \"dataHora\": \"2026-02-20T14:30:00\", \"observacoes\": \"Tentativa paciente 2\"}"
+        },
+        "url": "http://localhost:8081/consultas"
+      }
+    }
+  ],
+  "variable": [
+    {"key": "admin_token", "value": ""},
+    {"key": "medico_profile_id", "value": "1"},
+    {"key": "enf_profile_id", "value": "2"},
+    {"key": "paciente_profile_id", "value": "3"},
+    {"key": "paciente2_profile_id", "value": "4"},
+    {"key": "enfermeiro_token", "value": ""},
+    {"key": "consulta_by_enf", "value": ""},
+    {"key": "medico_token", "value": ""},
+    {"key": "consulta_pac2", "value": ""},
+    {"key": "paciente_token", "value": ""},
+    {"key": "paciente2_token", "value": ""}
+  ]
+}
