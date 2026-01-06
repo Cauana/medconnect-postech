@@ -114,17 +114,19 @@ public class HistoricoConsultaService {
             throw new SecurityException("Paciente não autorizado a acessar histórico de outro paciente");
         }
     }
-    
+
     public void validarAcessoMedico(Long idMedico, Long idConsulta) {
         consultaRepository.findById(idConsulta).ifPresentOrElse(
-            consulta -> {
-                if (consulta.getIdMedico() != idMedico) {
-                    throw new SecurityException("Médico não autorizado a acessar histórico de consulta de outro médico");
+                consulta -> {
+                    if (!Long.valueOf(consulta.getIdMedico()).equals(idMedico)) {
+                        throw new SecurityException(
+                                "Médico não autorizado a acessar histórico de consulta de outro médico"
+                        );
+                    }
+                },
+                () -> {
+                    throw new RuntimeException("Consulta não encontrada");
                 }
-            },
-            () -> {
-                throw new RuntimeException("Consulta não encontrada");
-            }
         );
     }
     
