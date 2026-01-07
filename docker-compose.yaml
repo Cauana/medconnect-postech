@@ -101,10 +101,10 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      EMAIL_HOST: smtp.mailtrap.io
-      EMAIL_PORT: 2525
-      EMAIL_USER: usuario_mailtrap
-      EMAIL_PASS: senha_mailtrap
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}
     depends_on:
       - kafka
     networks:

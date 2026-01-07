@@ -20,6 +20,8 @@ public class ConsultaEvent {
     private String nomeMedico;
     private LocalDateTime dataHora;
     private String status;
+    private String agendadoPorRole;
+    private String agendadoPorNome;
 
     
 }

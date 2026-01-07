@@ -75,7 +75,9 @@ public class ConsultaController {
     public ResponseEntity<Consulta> criar(@RequestBody Consulta consulta) {
         try {
             consulta.setStatus(StatusConsulta.AGENDADA);
-            service.agendarConsulta(consulta);
+            String userRole = getCurrentUserRole();
+            long userId = getCurrentUserId();
+            service.agendarConsulta(consulta, userRole, userId);
             Consulta consultaSalva = repositorio.save(consulta);
             return ResponseEntity.status(HttpStatus.CREATED).body(consultaSalva);
         } catch (Exception e) {
