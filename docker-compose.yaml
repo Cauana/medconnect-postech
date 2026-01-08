@@ -110,25 +110,6 @@ services:
     networks:
       - medconnect-net
 
-  # Serviço de Histórico (opcional)
-  servico-historico:
-    build: ./servicos/servico-historico
-    container_name: medconnect_historico
-    ports:
-      - "8083:8080"
-    env_file:
-      - .env
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/medconnect
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - medconnect-net
-
 # Rede interna usada entre os serviços
 networks:
   medconnect-net:
