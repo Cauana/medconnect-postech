@@ -101,31 +101,12 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      EMAIL_HOST: smtp.mailtrap.io
-      EMAIL_PORT: 2525
-      EMAIL_USER: usuario_mailtrap
-      EMAIL_PASS: senha_mailtrap
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}
     depends_on:
       - kafka
-    networks:
-      - medconnect-net
-
-  # Serviço de Histórico (opcional)
-  servico-historico:
-    build: ./servicos/servico-historico
-    container_name: medconnect_historico
-    ports:
-      - "8083:8080"
-    env_file:
-      - .env
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/medconnect
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
     networks:
       - medconnect-net
 

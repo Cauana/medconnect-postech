@@ -69,7 +69,9 @@ public class ConsultaService {
                 paciente.getNome(),
                 medico.getNome(),
                 salva.getDataHora(),
-                salva.getStatus().name()
+                salva.getStatus().name(),
+                "MEDICO",
+                medico.getNome()
         );
 
         try {
@@ -167,7 +169,7 @@ public class ConsultaService {
         consultaRepository.deleteById(id);
     }
 
-    public Consulta agendarConsulta(Consulta consulta) {
+    public Consulta agendarConsulta(Consulta consulta, String userRole, long userId) {
         Usuario paciente = usuarioRepository.findById(consulta.getIdPaciente())
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
         Usuario medico = usuarioRepository.findById(consulta.getIdMedico())
@@ -189,13 +191,25 @@ public class ConsultaService {
         );
 
         // Cria e envia o evento Kafka
+        String agendadoPorRole = (userRole == null || userRole.isBlank()) ? "MEDICO" : userRole;
+        String agendadoPorNome;
+        if ("MEDICO".equalsIgnoreCase(agendadoPorRole)) {
+            agendadoPorNome = medico.getNome();
+        } else {
+            Usuario agendador = usuarioRepository.findById(userId)
+                    .orElse(null);
+            agendadoPorNome = agendador != null ? agendador.getNome() : medico.getNome();
+        }
+
         ConsultaEvent event = new ConsultaEvent(
                 salva.getId(),
                 paciente.getEmail(),
                 paciente.getNome(),
                 medico.getNome(),
                 consulta.getDataHora(),
-                salva.getStatus().name()
+                salva.getStatus().name(),
+                agendadoPorRole,
+                agendadoPorNome
         );
 
         try {

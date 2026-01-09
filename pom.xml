@@ -19,7 +19,6 @@
         <!-- Serviços -->
         <module>servicos/servico-agendamento</module>
         <module>servicos/servico-notificacao</module>
-        <module>servicos/servico-historico</module>
     </modules>
 
     <parent>
